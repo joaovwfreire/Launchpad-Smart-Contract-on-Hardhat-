@@ -20,11 +20,9 @@ Libraries:
 
 Modifiers:
     ERC20
-    SaleIsOver
-    SaleIsNotOver
     Ownable
     ReentrancyGuard
-    SaleIsOver
+
 
 Storage variables:
     uint32 startBlockTimestamp
@@ -33,8 +31,9 @@ Storage variables:
     uint256 Hard Cap - maximum amount of eth
     uint256 OfferingSize
     uint256 Total raised amount
-    address Offering address - token sold
+    IRC20 Offering address - token sold;
     address factory
+    Stages stage;
 
 Storage mappings:
     (address => uint256) user address => tokens amount - will help monitor the size of one's investment
@@ -44,25 +43,24 @@ Storage arrays:
 
 Events:
     Claim
-    Finished
-    Frozen
     Invest
+    StateChange
 
 Constructor:
     Receives all the storage variables as arguments but the owner, which should be the msg.sender (in our case, the factory contract).    
 
 Functions:
     external
-        claim pausable
-        finishsale - onlyOwner
-        pausesale - onlyOwner pausable
-        invest pausable
+        claim       atStage(Stage.Claim) 
+        finishsale  atStage(Stage.Open)
+        invest      atStage(Stage.Open) payable
 
     public
         getUserShares - view returns(uint256)
         
         
     internal
+        nextStage();
     private
 
 
