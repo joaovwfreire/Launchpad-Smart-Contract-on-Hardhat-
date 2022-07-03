@@ -11,20 +11,31 @@ describe("ERC20Sales", function () {
   let endBlockTimestamp;
   let softCap = ethers.utils.parseEther("5") ;
   let hardCap = ethers.utils.parseEther("50") ;
-  let offeringToken = 1000000;
+  let offeringSize = 1000000;
   let totalRaised = 0;
   let theContract;
   let initialOffer;
+  let TokenToTest;
   
   before(async () => {
-    [user1, user2, user3, user4, user5, user6, offeringAddress, factory] = await ethers.getSigners();
+    [user1, user2, user3, user4, user5, user6, factory] = await ethers.getSigners();
     let startBlock = await ethers.provider.getBlock("latest");
     startBlockTimestamp = startBlock.timestamp;
     endBlockTimestamp = startBlockTimestamp + 60 * 60 * 24;
+    TokenToTest = await ethers.getContractFactory("TTTToken");
+    let offeringAddress = await TokenToTest.deploy(100000000);
     
     const ERC20Sales = await ethers.getContractFactory("ERC20Sales");
-    initialOffer = await ERC20Sales.deploy(startBlockTimestamp, endBlockTimestamp, softCap, hardCap, offeringToken, totalRaised, offeringAddress.address);
+    initialOffer = await ERC20Sales.deploy(startBlockTimestamp, endBlockTimestamp, softCap, hardCap, offeringSize, totalRaised, offeringAddress.address);
     await initialOffer.deployed();
+
+    
+    
+    
+    await offeringAddress.transfer(initialOffer.address, offeringSize);
+    let a = await offeringAddress.balanceOf(offeringAddress.address);
+    let b = await offeringAddress.balanceOf(initialOffer.address);
+    console.log(a, b);
 
   })
 
@@ -71,7 +82,7 @@ describe("ERC20Sales", function () {
     expect(user4Shares).to.equal(80000000);
 
     let user2Claim = await initialOffer.getClaimAmount(user2.address);
-    expect(user2Claim).to.equal(user2Shares * offeringToken / (10 ** 8));
+    expect(user2Claim).to.equal(user2Shares * offeringSize / (10 ** 8));
     let user4Claim = await initialOffer.getClaimAmount(user4.address);
     expect(user4Claim).to.equal(800000);
 

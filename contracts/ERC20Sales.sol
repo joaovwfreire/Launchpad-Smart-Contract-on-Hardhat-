@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
 contract ERC20Sales is Ownable, ReentrancyGuard{
-    
+
     enum Stages {
         Open,
         Finished,
@@ -106,9 +106,10 @@ contract ERC20Sales is Ownable, ReentrancyGuard{
         accounts[_account].claimed = true;
         uint claims = getClaimAmount(_account);
         uint refunds = getRefundsAmount(_account);
-
-        //offeringToken.safeTransfer(_account, claims);
-
+        
+        
+        offeringToken.transfer(msg.sender, claims);
+        
         if(refunds > 0){
             _account.call{value: refunds};
         }
