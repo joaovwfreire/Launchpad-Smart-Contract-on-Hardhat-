@@ -40,7 +40,7 @@ Storage variables:
 
 Storage mappings:
 
-    (address => uint256) user address => tokens amount - will help monitor the size of one's investment
+    (address => Account) user address => (tokens amount AND claimed boolean) - will help monitor the size of one's investment
     
 
 Storage arrays:
@@ -77,6 +77,60 @@ Functions:
 Fallback: 
 
     None so users are not allowed to send us ether without specific details
+
+# Sales Factory
+
+    Unfortunately this is a Minimum Viable Product, therefore it is not available at this repo.
+
+Libraries:
+
+Modifiers:
+
+    Ownable
+    Pausable
+    ReentrancyGuard
+    SafeMath
+    
+Storage variables:
+
+    factoryOwner 
+    newSaleFee
+    forwardPaymentDiscount
+    isFrozen
+
+
+Storage mappings:
+
+    (address => Sale) sale contract's address => (sale deadline AND project address)
+
+Storage arrays:
+
+    address salesOpen
+    address salesFinished 
+
+Constructor:
+
+    Makes the msg.sender the owner of the contract. newSaleFee default is 5 = 5%. isFrozen default is false. forwardPaymentDiscount default is 20 = 20%. 
+
+Functions:
+
+    external
+        withdrawFees isFrozen(false) onlyOwner
+        startNewSale isFrozen(false)
+        changefees onlyOwner
+        
+
+    public
+
+
+    internal
+        
+
+    private
+
+
+
+Fallback:
 
 # ERC-721 Sales Structure
 

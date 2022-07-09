@@ -7,3 +7,6 @@ typechain
 #Hardhat files
 cache
 artifacts
+
+#Factory Smart Contract
+contracts/SalesFactory.sol
