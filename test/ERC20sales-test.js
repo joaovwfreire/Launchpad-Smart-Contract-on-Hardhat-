@@ -35,7 +35,7 @@ describe("ERC20Sales", function () {
     await offeringAddress.transfer(initialOffer.address, offeringSize);
     let a = await offeringAddress.balanceOf(offeringAddress.address);
     let b = await offeringAddress.balanceOf(initialOffer.address);
-    console.log(a, b);
+
 
   })
 
