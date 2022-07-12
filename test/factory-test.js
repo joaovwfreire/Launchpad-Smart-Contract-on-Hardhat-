@@ -14,7 +14,7 @@ describe("SalesFactory", function () {
     let softCap = ethers.utils.parseEther("5") ;
     let hardCap = ethers.utils.parseEther("50") ;
     let offeringSize = 1000000;
-    let totalRaised = 10319300;
+    let totalRaised = 0;
     let theSalesContract;
     let saleAddress;
     let salesFactory;
@@ -81,6 +81,33 @@ describe("SalesFactory", function () {
         await theSalesContract.connect(user3).invest(arg);
         let userBalance = await theSalesContract.getUserBalance(user3.address);
         expect(userBalance.amount).to.equal(ethers.utils.parseEther("1").toString());
+    
+      });
+
+      it("Should revert if the investment amount is too low", async function () {
+    
+        let failInvestmentAmount = ethers.utils.parseEther("0.009");
+        await expect(theSalesContract.connect(user4).invest({value: failInvestmentAmount.toString()}))
+        .to.be.revertedWith("Invested amount is too low!");
+    
+      });
+
+      it("Should return the correct total investment, user shares and claim amount", async function () {
+        await theSalesContract.connect(user5).invest({value: ethers.utils.parseEther("4").toString()})
+        
+        let totalRaised = await theSalesContract.totalRaised();
+        expect(totalRaised).to.equal(ethers.utils.parseEther("5"));
+    
+        let user5Shares = await theSalesContract.getUserShares(user5.address);
+        expect(user5Shares).to.equal(80000000);
+        let user3Shares = await theSalesContract.getUserShares(user3.address);
+        expect(user3Shares).to.equal(20000000);
+        
+    
+        let user3Claim = await theSalesContract.getClaimAmount(user3.address);
+        expect(user3Claim).to.equal(user3Shares * offeringSize / (10 ** 8));
+        let user5Claim = await theSalesContract.getClaimAmount(user5.address);
+        expect(user5Claim).to.equal(800000);
     
       });
 });
