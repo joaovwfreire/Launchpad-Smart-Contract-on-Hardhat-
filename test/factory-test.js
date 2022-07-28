@@ -51,12 +51,12 @@ describe("SalesFactory", function () {
         
         
         /*
-        await expect(salesFactory.connect(user2).startNewSale(endBlockTimestamp, softCap, hardCap, offeringSize, totalRaised, offeringAddress.address, 1, {value: ethers.utils.parseEther("0.25").toString()},))
+        await expect(salesFactory.connect(user2).startNewErc20Sale(endBlockTimestamp, softCap, hardCap, offeringSize, totalRaised, offeringAddress.address, 1, {value: ethers.utils.parseEther("0.25").toString()},))
         .to.emit(salesFactory, "SaleCreated")
         .withArgs(user2.address, "0x856e4424f806D16E8CBC702B3c0F2ede5468eae5", endBlockTimestamp, ethers.utils.parseEther("0.25"), true );
         */
 
-        const tx = await salesFactory.connect(user2).startNewSale(endBlockTimestamp, softCap, hardCap, offeringSize, totalRaised, offeringAddress.address, 1, {value: ethers.utils.parseEther("0.25").toString()},)
+        const tx = await salesFactory.connect(user2).startNewErc20Sale(endBlockTimestamp, softCap, hardCap, offeringSize, totalRaised, offeringAddress.address, {value: ethers.utils.parseEther("0.25").toString()},)
         const receipt = await tx.wait()
 
         let i = 0;

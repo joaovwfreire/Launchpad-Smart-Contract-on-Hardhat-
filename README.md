@@ -8,9 +8,9 @@ I highly encourage other users to commit to this repo. Be it extra features, cor
 # Launchpad - The Smart Contract
 
 A launchpad is a comprehensive Solidity smart contract in terms of concepts needed to understand. If done right, it should include the usage of good design patterns, oracles and factory contracts.
-A launchpad is A platform in which the end-user can purchase initial offerings. 
+A launchpad is a platform in which the end-user can purchase initial offerings. 
 In the ERC-20 offering there is a minimum amount of sales (soft cap). The smart contract will receive ETH as payment and upon a manual transaction, the sale will be finished. To avoid block timestamp manipulation by validators, a 900 seconds wait will be enforced before users are able to claim their tokens. In the ERC721 and ERC-1155 launchpads, however, users will be able to claim their assets immediately after purchasing. The ERC721 will utilize the Merkle tree data structure to host both Whitelisted and non-whitelisted sales.
-The ERC-1155 launchpad will have two modes: a normal drop and a dutch auction. It will utilize an Oracle to host sales directly in USDC.
+The ERC-1155 launchpad will have two modes: a normal drop and a dutch auction. It will utilize an Oracle to host sales directly in USDC. Due to code sizes, the ERC-1155 launchpad was not possible to have a factory pattern.
 
 # ERC-20 Sales Structure
 

@@ -8,5 +8,4 @@ typechain
 cache
 artifacts
 
-#Factory Smart Contract
-contracts/SalesFactory.sol
+

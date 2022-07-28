@@ -2,21 +2,25 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+
 
 contract ERC1155TokenSales is ERC1155, Ownable, ReentrancyGuard {
 
-    using SafeMath for uint256;
     
     string public baseMetadataURI; //the token metadata URI
     string public name; //the token name
     string[] public names; //string array of names
     uint[] public ids; //uint array of ids
     uint[] public mintFees; //mintfees
+    address public projectOwner;
+    address public usdc;
+    uint256 public collectedFees;
     
+
     mapping(string => uint) public nameToId; //name to id mapping
     mapping(uint => string) public idToName; //id to name mapping
 
@@ -25,14 +29,15 @@ contract ERC1155TokenSales is ERC1155, Ownable, ReentrancyGuard {
     /*
     constructor is executed when the factory contract calls its own deployERC1155 method
     */
-    constructor(string memory _contractName, string memory _uri, string[] memory _names, uint[] memory _ids, uint[] memory _mintFees) ERC1155(_uri) {
+    constructor(string memory _contractName, string memory _uri, string[] memory _names, uint[] memory _ids, uint[] memory _mintFees, address _usdcAddress) ERC1155(_uri) {
         names = _names;
         ids = _ids;
-        createMapping();
+        createMapping(); 
         setURI(_uri);
         baseMetadataURI = _uri;
         name = _contractName;
         mintFees = _mintFees;
+        usdc = _usdcAddress;
         transferOwnership(msg.sender);
     }   
 
@@ -99,7 +104,7 @@ contract ERC1155TokenSales is ERC1155, Ownable, ReentrancyGuard {
     {
 
         uint pricePerToken = mintFees[_id - 1];
-        require(msg.value == pricePerToken.mul(amount), "Wrong amount sent!");
+        require(msg.value == pricePerToken * amount, "Wrong amount sent!");
         _mint(account, _id, amount, "");
         emit Mint(_id, amount, account);
         return _id;
@@ -124,7 +129,7 @@ contract ERC1155TokenSales is ERC1155, Ownable, ReentrancyGuard {
         for(uint8 i = 0; i< _ids.length; i++){
             require(i < availableIds[idsArrayLength -1], "Wrong input");
                 // _ids[i] -1 is the index I need to access at availableMintFees and amounts in order to figure out the total cost
-                 totalCost += (amounts[_ids[i] -1]).mul(availableMintFees[_ids[i] -1]);
+                 totalCost += (amounts[_ids[i] -1]) * (availableMintFees[_ids[i] -1]);
         }
         require(msg.value == totalCost, "Wrong amount sent!");
 
